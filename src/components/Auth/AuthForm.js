@@ -1,10 +1,13 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useContext } from 'react';
 
+import AuthContext from '../../store/auth-context';
 import classes from './AuthForm.module.css';
 
 const AuthForm = () => {
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
+
+  const authCtx = useContext(AuthContext);
 
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +31,7 @@ const AuthForm = () => {
         'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBDWh-HNvbkUvfvAzeqUNVk-zChPEvOXPE';
     } else {
       url =
-        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBDWh-HNvbkUvfvAzeqUNVk-zChPEvOXPE';
+        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBDWh-HNvbkUvfvAzeqUNVk-zChPEvOXPE';
     }
     fetch(url, {
       method: 'POST',
@@ -57,7 +60,7 @@ const AuthForm = () => {
         }
       })
       .then((data) => {
-        console.log(data);
+        authCtx.login(data.idToken);
       })
       .catch((err) => {
         alert(err.message);
